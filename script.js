@@ -17,9 +17,34 @@ setInterval(() => {
   trail.style.left = mx + 'px'; trail.style.top = my + 'px';
 }, 60);
 
-document.querySelectorAll('button,.btn-open,.easter-close').forEach(el => {
-  el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2)'; });
-  el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; });
+// Selection of interactive elements to scale up the custom cursor
+const interactiveElements = document.querySelectorAll('button, .btn-open, .ctrl-btn, .easter-close, .moon-wrap, .scene-item');
+
+interactiveElements.forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(2)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+  });
+  el.addEventListener('click', () => {
+    cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+    if (typeof el.blur === 'function') el.blur();
+  });
+});
+
+// Hide custom cursor when mouse leaves the browser window
+document.addEventListener('mouseleave', () => {
+  cursor.style.display = 'none';
+  trail.style.display = 'none';
+  mouseGlow.style.display = 'none';
+});
+
+// Show custom cursor when mouse enters the browser window
+document.addEventListener('mouseenter', () => {
+  cursor.style.display = 'block';
+  trail.style.display = 'block';
+  mouseGlow.style.display = 'block';
 });
 
 /* ═══════════════════════════════════════════
@@ -382,7 +407,7 @@ function drawConfetti() {
 drawConfetti();
 
 /* ═══════════════════════════════════════════
-   AUDIO PLAYBACK
+   AUDIO PLAYBACK (5-SONG PLAYLIST CYCLE)
 ═══════════════════════════════════════════ */
 const bgAudio = document.getElementById('bgAudio');
 let musicOn = false;
@@ -390,23 +415,136 @@ let musicOn = false;
 // Set default comfortable volume
 bgAudio.volume = 0.5;
 
-function toggleMusic() {
+const playlist = [
+  {
+    title: "Buddhan Saranan Gachchami",
+    src: "Buddan_Saranan_Gachchami-Obe_Ragi_Mana_Mohideen_Beg_Sarigama_lk.mp3"
+  },
+  {
+    title: "Dewram Wehere",
+    src: "Dewram_Wehere_Victor_Rathnayake_Sarigama_lk.mp3",
+    local: "Dewram_Wehere.mp3"
+  },
+  {
+    title: "Paramitha Bala Pooritha Poojitha",
+    src: "Paramitha_Bala_Pooritha_Poojitha_W_D_Amaradewa_Sarigama_lk.mp3",
+    local: "Paramitha_Bala_Pooritha_Poojitha.mp3"
+  },
+  {
+    title: "Budu Hamuduruwo",
+    src: "Budu_Hamuduruwo_Apith_Dakinnethi_Victor_Rathnayake_Sarigama_lk.mp3",
+    local: "Budu_Hamuduruwo.mp3"
+  },
+  {
+    title: "Sasara Wasana Thuru",
+    src: "Sasara_Wasana_Thuru_W_D_Amaradewa_Sarigama_lk.mp3",
+    local: "Sasara_Wasanathuru.mp3"
+  }
+];
+
+let playlistIndex = -1; // -1 means stopped/inactive
+let toastTimeout = null;
+
+function showSongToast(title) {
+  const toast = document.getElementById('musicToast');
+  const toastTitle = document.getElementById('musicToastTitle');
+  if (!toast || !toastTitle) return;
+
+  toastTitle.textContent = title;
+  toast.classList.add('show');
+
+  if (toastTimeout) clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 4000);
+}
+
+function getActiveSrc(song, callback) {
+  if (!song.local) {
+    callback(song.src);
+    return;
+  }
+  // Check if local file exists, fall back to online archive URL if not
+  fetch(song.local, { method: 'HEAD' })
+    .then(res => {
+      if (res.ok) {
+        callback(song.local);
+      } else {
+        callback(song.src);
+      }
+    })
+    .catch(() => {
+      callback(song.src);
+    });
+}
+
+function playSongAtIndex(index) {
   const btn = document.getElementById('musicBtn');
-  if (!musicOn) {
-    bgAudio.play().then(() => {
-      musicOn = true;
-      btn.classList.add('active');
-      btn.textContent = '🔊';
-    }).catch(err => {
-      console.error("Audio playback failed:", err);
+  if (!btn) return;
+
+  if (index >= 0 && index < playlist.length) {
+    playlistIndex = index;
+    const currentSong = playlist[playlistIndex];
+
+    getActiveSrc(currentSong, (resolvedSrc) => {
+      bgAudio.src = resolvedSrc;
+      bgAudio.load();
+      bgAudio.play().then(() => {
+        musicOn = true;
+        btn.classList.add('active');
+        btn.textContent = '🔊';
+        showSongToast(currentSong.title);
+      }).catch(err => {
+        console.error("Audio playback failed, trying fallback:", err);
+        // If local failed, retry with online URL
+        if (resolvedSrc !== currentSong.src) {
+          bgAudio.src = currentSong.src;
+          bgAudio.load();
+          bgAudio.play().then(() => {
+            musicOn = true;
+            btn.classList.add('active');
+            btn.textContent = '🔊';
+            showSongToast(currentSong.title);
+          }).catch(onlineErr => {
+            console.error("Online audio failed:", onlineErr);
+            playSongAtIndex(-1); // stop
+          });
+        } else {
+          playSongAtIndex(-1); // stop
+        }
+      });
     });
   } else {
-    bgAudio.pause();
+    playlistIndex = -1;
     musicOn = false;
+    bgAudio.pause();
     btn.classList.remove('active');
     btn.textContent = '🎵';
+    const toast = document.getElementById('musicToast');
+    if (toast) toast.classList.remove('show');
   }
 }
+
+function toggleMusic() {
+  if (playlistIndex === -1) {
+    playSongAtIndex(0);
+  } else if (playlistIndex === playlist.length - 1) {
+    playSongAtIndex(-1);
+  } else {
+    playSongAtIndex(playlistIndex + 1);
+  }
+}
+
+// Auto-advance when the track ends
+bgAudio.addEventListener('ended', () => {
+  if (playlistIndex !== -1) {
+    if (playlistIndex === playlist.length - 1) {
+      playSongAtIndex(-1);
+    } else {
+      playSongAtIndex(playlistIndex + 1);
+    }
+  }
+});
 
 /* ═══════════════════════════════════════════
    FX TOGGLE
