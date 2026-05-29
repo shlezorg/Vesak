@@ -1193,7 +1193,7 @@ body {
 
   .birth-decoration {
     left: -15px;
-    bottom: 400px;
+    bottom: 300px;
     left: 20px;
     opacity: 0.6;
   }
@@ -1205,6 +1205,7 @@ body {
   .parinirvana-decoration {
     height: clamp(300px, 11vh, 120px);
     opacity: 0.45;
+    left:-10px;
     bottom:-80px;
   }
 
@@ -1215,6 +1216,7 @@ body {
     padding: 28px 18px 26px;
   }
 }
+
 
 /* ═══════════════════════════════════════════
    REDUCED MOTION PREFERENCE
