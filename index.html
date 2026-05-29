@@ -1,78 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vesak 2026 — සුභ වෙසක් මංගල්‍යයක් වේවා</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+Sinhala:wght@300;400;600&family=Cinzel+Decorative:wght@400;700&display=swap"
-    rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+Sinhala:wght@300;400;600&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-  <!-- LOGO CONTAINER -->
   <div class="logo-container">
     <img src="scu_logo.png" alt="SCU Logo" class="logo-img">
     <div class="logo-divider"></div>
     <img src="scu_art_circle_logo.jpg" alt="SCU Art Circle Logo" class="logo-img circular">
   </div>
-
-  <!-- CUSTOM CURSOR -->
   <div class="cursor" id="cursor"></div>
   <div class="cursor-trail" id="cursorTrail"></div>
-
-  <!-- MOUSE GLOW -->
   <div class="mouse-glow" id="mouseGlow"></div>
-
-  <!-- CANVASES -->
   <canvas id="starCanvas"></canvas>
   <canvas id="particleCanvas"></canvas>
   <canvas id="confettiCanvas"></canvas>
-
-  <!-- MOON -->
-  <div class="moon-wrap">
-    <div class="moon"></div>
-  </div>
-
-  <!-- LANTERNS -->
+  <div class="moon-wrap"><div class="moon"></div></div>
   <div class="lantern-field" id="lanternField"></div>
-
-  <!-- PETALS -->
   <div class="petal-field" id="petalField"></div>
-
-  <!-- LOTUS SCENE -->
   <div class="lotus-scene" id="lotusScene"></div>
-
-  <!-- WATER REFLECTION -->
   <div class="water-reflection"></div>
-
-  <!-- BUDDHA DECORATION -->
-  <img src="buddha_statue.png" alt="Buddha Statue" class="buddha-decoration">
-
-  <!-- BIRTH DECORATION -->
+  <img src="buddha_statue.avif" alt="Buddha Statue" class="buddha-decoration">
   <div class="birth-decoration">
     <div class="birth-rays"></div>
-    <img src="baby_siddhartha.png" alt="Birth of Prince Siddhartha" class="birth-img">
+    <img src="baby_siddhartha.avif" alt="Birth of Prince Siddhartha" class="birth-img">
     <div class="birth-lotus-trail">
-      <span class="blt blt1">🪷</span>
-      <span class="blt blt2">🪷</span>
-      <span class="blt blt3">🪷</span>
-      <span class="blt blt4">🪷</span>
-      <span class="blt blt5">🪷</span>
-      <span class="blt blt6">🪷</span>
-      <span class="blt blt7">🪷</span>
+      <span class="blt blt1">🪷</span><span class="blt blt2">🪷</span><span class="blt blt3">🪷</span><span class="blt blt4">🪷</span><span class="blt blt5">🪷</span><span class="blt blt6">🪷</span><span class="blt blt7">🪷</span>
     </div>
   </div>
-
-  <!-- PARINIRVANA DECORATION -->
-  <img src="reclining_buddha.png" alt="Parinirvana of Lord Buddha" class="parinirvana-decoration">
-
-  <!-- MAIN SCENE -->
+  <img src="reclining_buddha.avif" alt="Parinirvana of Lord Buddha" class="parinirvana-decoration">
   <div class="scene" id="mainScene">
     <header class="hero-header">
       <div class="hero-subtitle">✦ Sacred Celebration of Light ✦</div>
@@ -80,15 +41,9 @@
       <div class="hero-dhamma">The Festival of the Thrice Blessed One</div>
       <div class="hero-presenter">Presented by SCU Art Circle</div>
     </header>
-
-    <!-- CARD WRAPPER -->
     <div class="card-wrap" id="cardWrap">
-
-      <!-- CLOSED CARD -->
       <div class="card-closed" id="cardClosed">
         <div class="candle-glow"></div>
-
-        <!-- Mandala SVG -->
         <svg class="mandala" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <radialGradient id="mg" cx="50%" cy="50%" r="50%">
@@ -102,42 +57,18 @@
           <circle cx="50" cy="50" r="14" fill="none" stroke="url(#mg)" stroke-width="1" opacity="0.9" />
           <circle cx="50" cy="50" r="4" fill="#ffe98a" />
           <g stroke="url(#mg)" stroke-width="0.7" opacity="0.75">
-            <line x1="50" y1="2" x2="50" y2="98" />
-            <line x1="2" y1="50" x2="98" y2="50" />
-            <line x1="15" y1="15" x2="85" y2="85" />
-            <line x1="85" y1="15" x2="15" y2="85" />
-            <line x1="50" y1="2" x2="85" y2="27" />
-            <line x1="85" y1="27" x2="98" y2="62" />
-            <line x1="98" y1="62" x2="73" y2="93" />
-            <line x1="73" y1="93" x2="27" y2="93" />
-            <line x1="27" y1="93" x2="2" y2="62" />
-            <line x1="2" y1="62" x2="15" y2="27" />
-            <line x1="15" y1="27" x2="50" y2="2" />
+            <line x1="50" y1="2" x2="50" y2="98" /><line x1="2" y1="50" x2="98" y2="50" /><line x1="15" y1="15" x2="85" y2="85" /><line x1="85" y1="15" x2="15" y2="85" /><line x1="50" y1="2" x2="85" y2="27" /><line x1="85" y1="27" x2="98" y2="62" /><line x1="98" y1="62" x2="73" y2="93" /><line x1="73" y1="93" x2="27" y2="93" /><line x1="27" y1="93" x2="2" y2="62" /><line x1="2" y1="62" x2="15" y2="27" /><line x1="15" y1="27" x2="50" y2="2" />
           </g>
           <g fill="#ffe98a" opacity="0.7">
-            <ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(0 50 50)" />
-            <ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(45 50 50)" />
-            <ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(90 50 50)" />
-            <ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(135 50 50)" />
-            <ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(180 50 50)" />
-            <ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(225 50 50)" />
-            <ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(270 50 50)" />
-            <ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(315 50 50)" />
+            <ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(0 50 50)" /><ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(45 50 50)" /><ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(90 50 50)" /><ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(135 50 50)" /><ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(180 50 50)" /><ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(225 50 50)" /><ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(270 50 50)" /><ellipse cx="50" cy="12" rx="3" ry="5" transform="rotate(315 50 50)" />
           </g>
         </svg>
-
         <div class="vesak-label">✦ Vesak Poya ✦</div>
         <div class="main-wish-en">Happy Vesak Day</div>
         <div class="main-wish-si">සුභ වෙසක් මංගල්‍යයක් වේවා!</div>
-
-        <button class="btn-open" id="btnOpen" onclick="openCard()">
-          <span>🪔 Open Greeting</span>
-        </button>
+        <button class="btn-open" id="btnOpen" onclick="openCard()"><span>🪔 Open Greeting</span></button>
       </div>
-
-      <!-- OPEN CARD -->
       <div class="card-open" id="cardOpen">
-        <!-- Dharma Wheel -->
         <svg class="dharma-wheel-big" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <radialGradient id="dg" cx="50%" cy="50%" r="50%">
@@ -148,99 +79,53 @@
           <circle cx="50" cy="50" r="46" fill="none" stroke="url(#dg)" stroke-width="6" opacity="0.7" />
           <circle cx="50" cy="50" r="10" fill="url(#dg)" opacity="0.9" />
           <g stroke="url(#dg)" stroke-width="3" opacity="0.8">
-            <line x1="50" y1="4" x2="50" y2="96" />
-            <line x1="4" y1="50" x2="96" y2="50" />
-            <line x1="17" y1="17" x2="83" y2="83" />
-            <line x1="83" y1="17" x2="17" y2="83" />
+            <line x1="50" y1="4" x2="50" y2="96" /><line x1="4" y1="50" x2="96" y2="50" /><line x1="17" y1="17" x2="83" y2="83" /><line x1="83" y1="17" x2="17" y2="83" />
           </g>
           <g fill="url(#dg)" opacity="0.85">
-            <path d="M50,7 L54,16 L50,20 L46,16 Z" />
-            <path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(45 50 50)" />
-            <path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(90 50 50)" />
-            <path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(135 50 50)" />
-            <path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(180 50 50)" />
-            <path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(225 50 50)" />
-            <path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(270 50 50)" />
-            <path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(315 50 50)" />
+            <path d="M50,7 L54,16 L50,20 L46,16 Z" /><path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(45 50 50)" /><path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(90 50 50)" /><path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(135 50 50)" /><path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(180 50 50)" /><path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(225 50 50)" /><path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(270 50 50)" /><path d="M50,7 L54,16 L50,20 L46,16 Z" transform="rotate(315 50 50)" />
           </g>
         </svg>
-
         <div class="sinhala-big" id="sinhalaTyped"></div>
         <div class="english-big" id="englishTyped"></div>
-
         <div class="divider"></div>
-
         <p class="wish-text">
-          May the radiant light of Vesak illuminate your heart with boundless peace, ancient wisdom, and
-          loving-kindness.<br><br>
-          On this sacred Poya night, as a thousand lanterns rise toward the heavens, may your spirit be lifted with
-          compassion, your mind be stilled in mindfulness, and your life be blessed with <em>dhamma</em>.
+          May the radiant light of Vesak illuminate your heart with boundless peace, ancient wisdom, and loving-kindness.<br><br>
+          On this sacred Poya night, as a thousand lanterns rise toward the heavens, may your spirit be lifted with compassion, your mind be stilled in mindfulness, and your life be blessed with <em>dhamma</em>.
         </p>
-
         <div class="divider"></div>
-
-        <!-- BUDDHIST SCENES GALLERY -->
         <div class="scenes-gallery">
           <div class="scene-item">
             <img src="birth_siddhartha.png" alt="Birth of Prince Siddhartha" class="scene-img">
-            <div class="scene-caption">
-              <span class="si-caption">සිද්ධාර්ථ කුමාරෝත්පත්තිය</span>
-              <span class="en-caption">Birth of Prince Siddhartha</span>
-            </div>
+            <div class="scene-caption"><span class="si-caption">සිද්ධාර්ථ කුමාරෝත්පත්තිය</span><span class="en-caption">Birth of Prince Siddhartha</span></div>
           </div>
           <div class="scene-item">
             <img src="enlightenment.png" alt="Enlightenment of Lord Buddha" class="scene-img">
-            <div class="scene-caption">
-              <span class="si-caption">බුද්ධත්වය ලැබීම</span>
-              <span class="en-caption">Enlightenment of Lord Buddha</span>
-            </div>
+            <div class="scene-caption"><span class="si-caption">බුද්ධත්වය ලැබීම</span><span class="en-caption">Enlightenment of Lord Buddha</span></div>
           </div>
           <div class="scene-item">
             <img src="parinirvana.png" alt="Parinirvana of Lord Buddha" class="scene-img">
-            <div class="scene-caption">
-              <span class="si-caption">මහා පරිනිර්වාණය</span>
-              <span class="en-caption">Parinirvana of Lord Buddha</span>
-            </div>
+            <div class="scene-caption"><span class="si-caption">මහා පරිනිර්වාණය</span><span class="en-caption">Parinirvana of Lord Buddha</span></div>
           </div>
         </div>
-
         <div class="divider"></div>
-
         <div class="pali-quote">"Sabbe sattā sukhitā hontu"</div>
         <div class="pali-attr">— May all beings be happy —</div>
-
         <div class="divider"></div>
-
-        <button class="btn-open" onclick="triggerCelebration()" style="margin-top:16px">
-          <span>✨ Celebrate!</span>
-        </button>
+        <button class="btn-open" onclick="triggerCelebration()" style="margin-top:16px"><span>✨ Celebrate!</span></button>
       </div>
-
-    </div><!-- /card-wrap -->
-
-    <footer class="page-footer">
-      ✦ &nbsp; Namo Tassa Bhagavato Arahato Sammāsambuddhassa &nbsp; ✦
-    </footer>
-  </div><!-- /scene -->
-
-  <!-- CONTROLS -->
+    </div>
+    <footer class="page-footer">✦ &nbsp; Namo Tassa Bhagavato Arahato Sammāsambuddhassa &nbsp; ✦</footer>
+  </div>
   <div class="controls">
     <button class="ctrl-btn" id="musicBtn" title="Toggle Ambient Sound" onclick="toggleMusic()">🎵</button>
     <button class="ctrl-btn active" id="fxBtn" title="Toggle Light Effects" onclick="toggleFX()">✨</button>
     <button class="ctrl-btn" id="easterBtn" title="Secret" onclick="showEaster()">🌙</button>
   </div>
-
-  <!-- EASTER EGG -->
   <div class="easter-popup" id="easterPopup">
     <h3>🌸 A Hidden Teaching</h3>
-    <p>"The mind is everything. What you think, you become."<br><br>
-      — Siddhartha Gautama, the Awakened One<br><br>
-      <small style="color:rgba(245,200,66,0.5);font-size:0.78rem;">You found the secret blessing of Vesak 🪷</small>
-    </p>
+    <p>"The mind is everything. What you think, you become."<br><br>— Siddhartha Gautama, the Awakened One<br><br><small style="color:rgba(245,200,66,0.5);font-size:0.78rem;">You found the secret blessing of Vesak 🪷</small></p>
     <div class="easter-close" onclick="hideEaster()">Close ✦</div>
   </div>
-
-  <!-- MUSIC TOAST NOTIFICATION -->
   <div class="music-toast" id="musicToast">
     <span class="music-toast-icon">🎵</span>
     <div class="music-toast-content">
@@ -248,11 +133,7 @@
       <div class="music-toast-title" id="musicToastTitle">Buddhan Saranan Gachchami</div>
     </div>
   </div>
-
-  <!-- AUDIO (ambient bells) -->
   <audio id="bgAudio" src="Buddan_Saranan_Gachchami-Obe_Ragi_Mana_Mohideen_Beg_Sarigama_lk.mp3"></audio>
-
   <script src="script.js" defer></script>
 </body>
-
 </html>
