@@ -1,0 +1,459 @@
+/* ═══════════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════════ */
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursorTrail');
+const mouseGlow = document.getElementById('mouseGlow');
+let mx = 0, my = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  mouseGlow.style.left = mx + 'px'; mouseGlow.style.top = my + 'px';
+  // spawn sparkle
+  if (fxEnabled && Math.random() < 0.18) spawnMouseSpark(mx, my);
+});
+setInterval(() => {
+  trail.style.left = mx + 'px'; trail.style.top = my + 'px';
+}, 60);
+
+document.querySelectorAll('button,.btn-open,.easter-close').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; });
+});
+
+/* ═══════════════════════════════════════════
+   3D CARD TILT
+═══════════════════════════════════════════ */
+const cardClosed = document.getElementById('cardClosed');
+const cardWrap = document.getElementById('cardWrap');
+cardWrap.addEventListener('mousemove', e => {
+  if (document.getElementById('cardOpen').classList.contains('visible')) return;
+  const r = cardClosed.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width - 0.5;
+  const y = (e.clientY - r.top) / r.height - 0.5;
+  cardClosed.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 10}deg) scale(1.02)`;
+});
+cardWrap.addEventListener('mouseleave', () => {
+  cardClosed.style.transform = '';
+});
+
+/* ═══════════════════════════════════════════
+   STAR CANVAS
+═══════════════════════════════════════════ */
+const starCanvas = document.getElementById('starCanvas');
+const sCtx = starCanvas.getContext('2d');
+let stars = [];
+
+function resizeStar() {
+  starCanvas.width = window.innerWidth;
+  starCanvas.height = window.innerHeight;
+  initStars();
+}
+
+function initStars() {
+  stars = [];
+  const n = Math.floor((window.innerWidth * window.innerHeight) / 3200);
+  for (let i = 0; i < n; i++) {
+    stars.push({
+      x: Math.random() * starCanvas.width,
+      y: Math.random() * starCanvas.height,
+      r: Math.random() * 1.6 + 0.2,
+      a: Math.random(),
+      da: (Math.random() * 0.006 + 0.002) * (Math.random() < 0.5 ? 1 : -1),
+      color: Math.random() < 0.15 ? '#ffe98a' : Math.random() < 0.2 ? '#aaccff' : '#ffffff',
+    });
+  }
+}
+
+function drawStars() {
+  sCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+  stars.forEach(s => {
+    s.a += s.da;
+    if (s.a <= 0 || s.a >= 1) s.da *= -1;
+    sCtx.save();
+    sCtx.globalAlpha = s.a * 0.9;
+    sCtx.fillStyle = s.color;
+    sCtx.shadowBlur = s.r > 1 ? 8 : 3;
+    sCtx.shadowColor = s.color;
+    sCtx.beginPath();
+    sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    sCtx.fill();
+    sCtx.restore();
+  });
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize', resizeStar);
+resizeStar(); drawStars();
+
+/* ═══════════════════════════════════════════
+   PARTICLE CANVAS (ambient floating)
+═══════════════════════════════════════════ */
+const pCanvas = document.getElementById('particleCanvas');
+const pCtx = pCanvas.getContext('2d');
+let particles = [];
+let fxEnabled = true;
+
+function resizeParticle() {
+  pCanvas.width = window.innerWidth;
+  pCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeParticle);
+resizeParticle();
+
+function spawnParticle() {
+  if (!fxEnabled) return;
+  particles.push({
+    x: Math.random() * pCanvas.width,
+    y: pCanvas.height + 10,
+    r: Math.random() * 2 + 0.5,
+    vx: (Math.random() - 0.5) * 0.5,
+    vy: -(Math.random() * 0.7 + 0.3),
+    a: 1,
+    color: Math.random() < 0.5 ? '#f5c842' : Math.random() < 0.5 ? '#ff8c00' : '#ffe98a',
+  });
+}
+
+function drawParticles() {
+  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+  particles = particles.filter(p => p.a > 0);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    p.a -= 0.003;
+    pCtx.save();
+    pCtx.globalAlpha = p.a;
+    pCtx.fillStyle = p.color;
+    pCtx.shadowBlur = 8; pCtx.shadowColor = p.color;
+    pCtx.beginPath();
+    pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    pCtx.fill();
+    pCtx.restore();
+  });
+  requestAnimationFrame(drawParticles);
+}
+setInterval(spawnParticle, 120);
+drawParticles();
+
+/* Mouse sparkles */
+const mouseSparks = [];
+function spawnMouseSpark(x, y) {
+  for (let i = 0; i < 3; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const spd = Math.random() * 2 + 0.5;
+    particles.push({
+      x, y, r: Math.random() * 1.5 + 0.5,
+      vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+      a: 0.9, color: '#f5c842'
+    });
+  }
+}
+
+/* ═══════════════════════════════════════════
+   LANTERN GENERATOR
+═══════════════════════════════════════════ */
+const lanternField = document.getElementById('lanternField');
+const lanternColors = [
+  ['#ffcc44', '#ff8c00', '#ffe98a'],
+  ['#ff6b6b', '#ff8c00', '#ffb347'],
+  ['#c8960c', '#ffe98a', '#f5c842'],
+  ['#ff4500', '#ffcc44', '#ff8c00'],
+];
+
+function makeLanternSVG(style, colors) {
+  const [main, rim, glow] = colors;
+  if (style === 0) return `
+    <svg width="36" height="56" viewBox="0 0 36 56" xmlns="http://www.w3.org/2000/svg">
+      <defs><radialGradient id="lg${Math.random() | 0}" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="${glow}" stop-opacity="0.9"/>
+        <stop offset="100%" stop-color="${main}" stop-opacity="0.6"/>
+      </radialGradient></defs>
+      <line x1="18" y1="0" x2="18" y2="6" stroke="${rim}" stroke-width="1.5"/>
+      <ellipse cx="18" cy="8" rx="6" ry="2.5" fill="${rim}"/>
+      <path d="M8,10 Q4,28 6,38 Q12,50 18,50 Q24,50 30,38 Q32,28 28,10 Z" fill="url(#lg${Math.random() | 0})"/>
+      <ellipse cx="18" cy="48" rx="6" ry="2" fill="${rim}" opacity="0.8"/>
+      <line x1="18" y1="50" x2="18" y2="56" stroke="${rim}" stroke-width="1.2"/>
+      <line x1="14" y1="28" x2="22" y2="28" stroke="${rim}" stroke-width="0.8" opacity="0.5"/>
+      <line x1="11" y1="20" x2="25" y2="20" stroke="${rim}" stroke-width="0.8" opacity="0.4"/>
+      <line x1="11" y1="36" x2="25" y2="36" stroke="${rim}" stroke-width="0.8" opacity="0.4"/>
+      <ellipse cx="18" cy="30" rx="5" ry="8" fill="${glow}" opacity="0.25"/>
+    </svg>`;
+  if (style === 1) return `
+    <svg width="32" height="60" viewBox="0 0 32 60" xmlns="http://www.w3.org/2000/svg">
+      <line x1="16" y1="0" x2="16" y2="5" stroke="${rim}" stroke-width="1.5"/>
+      <rect x="10" y="5" width="12" height="4" rx="1" fill="${rim}"/>
+      <path d="M6,9 L4,46 Q10,54 16,54 Q22,54 28,46 L26,9 Z" fill="${main}" opacity="0.8"/>
+      <path d="M6,9 L26,9 L28,46 Q22,52 16,52 Q10,52 4,46 Z" fill="${glow}" opacity="0.2"/>
+      <line x1="4" y1="20" x2="28" y2="20" stroke="${rim}" stroke-width="0.6" opacity="0.4"/>
+      <line x1="4" y1="32" x2="28" y2="32" stroke="${rim}" stroke-width="0.6" opacity="0.4"/>
+      <line x1="4" y1="44" x2="28" y2="44" stroke="${rim}" stroke-width="0.6" opacity="0.4"/>
+      <rect x="10" y="45" width="12" height="4" rx="1" fill="${rim}"/>
+      <line x1="16" y1="54" x2="16" y2="60" stroke="${rim}" stroke-width="1.2"/>
+    </svg>`;
+  return `
+    <svg width="40" height="58" viewBox="0 0 40 58" xmlns="http://www.w3.org/2000/svg">
+      <line x1="20" y1="0" x2="20" y2="8" stroke="${rim}" stroke-width="1.5"/>
+      <ellipse cx="20" cy="10" rx="9" ry="3" fill="${rim}"/>
+      <ellipse cx="20" cy="32" rx="18" ry="22" fill="${main}" opacity="0.75"/>
+      <ellipse cx="20" cy="28" rx="12" ry="14" fill="${glow}" opacity="0.25"/>
+      <ellipse cx="20" cy="54" rx="9" ry="3" fill="${rim}" opacity="0.7"/>
+      <line x1="20" y1="54" x2="20" y2="58" stroke="${rim}" stroke-width="1.2"/>
+      <ellipse cx="20" cy="32" rx="5" ry="7" fill="${glow}" opacity="0.4"/>
+    </svg>`;
+}
+
+function spawnLantern() {
+  if (!fxEnabled) return;
+  const el = document.createElement('div');
+  el.className = 'lantern';
+  const style = Math.floor(Math.random() * 3);
+  const colors = lanternColors[Math.floor(Math.random() * lanternColors.length)];
+  el.innerHTML = makeLanternSVG(style, colors);
+  const left = 5 + Math.random() * 90;
+  const dur = 14 + Math.random() * 18;
+  const delay = Math.random() * 8;
+  const sway = (Math.random() - 0.5) * 30 + 'deg';
+  const sway2 = (Math.random() - 0.5) * 50 + 'deg';
+  const scale = 0.6 + Math.random() * 0.8;
+  el.style.cssText = `
+    left:${left}%;
+    --sway:${sway}; --sway2:${sway2};
+    animation-duration:${dur}s;
+    animation-delay:-${delay}s;
+    transform:scale(${scale});
+    animation:lanternRise ${dur}s ${-delay}s linear infinite;
+    filter:drop-shadow(0 0 ${10 + Math.random() * 10}px rgba(255,180,0,0.7));
+  `;
+  el.style.animation = `lanternRise ${dur}s -${delay}s linear infinite, lanternGlow ${2 + Math.random() * 2}s ease-in-out infinite alternate`;
+  lanternField.appendChild(el);
+}
+for (let i = 0; i < 16; i++) spawnLantern();
+
+/* ═══════════════════════════════════════════
+   PETALS
+═══════════════════════════════════════════ */
+const petalField = document.getElementById('petalField');
+const petalColors = ['#ffb3c6', '#ff8fab', '#ffc8dd', '#ffccd5', '#ffe0e9', '#ff6b95'];
+
+function spawnPetal() {
+  if (!fxEnabled) return;
+  const el = document.createElement('div');
+  el.className = 'petal';
+  const left = Math.random() * 100;
+  const dur = 8 + Math.random() * 12;
+  const delay = Math.random() * 10;
+  const drift = (Math.random() - 0.5) * 200 + 'px';
+  const spin = (Math.random() - 0.5) * 720 + 'deg';
+  const color = petalColors[Math.floor(Math.random() * petalColors.length)];
+  el.style.cssText = `
+    left:${left}%;
+    background:${color};
+    --drift:${drift}; --spin:${spin};
+    animation: petalFall ${dur}s -${delay}s ease-in infinite;
+    transform:rotate(${Math.random() * 360}deg);
+    opacity:0;
+    box-shadow:0 0 4px ${color}44;
+  `;
+  petalField.appendChild(el);
+  if (petalField.children.length > 60) petalField.removeChild(petalField.children[0]);
+}
+for (let i = 0; i < 30; i++) spawnPetal();
+setInterval(spawnPetal, 800);
+
+/* ═══════════════════════════════════════════
+   LOTUS SVG
+═══════════════════════════════════════════ */
+const lotusScene = document.getElementById('lotusScene');
+function makeLotus(x, scale, hue) {
+  const el = document.createElement('div');
+  el.className = 'lotus';
+  el.style.cssText = `left:${x}%;transform-origin:bottom center;transform:scale(${scale});animation-delay:${Math.random() * 3}s`;
+  const s = hue === 'white' ? { p: '#ffe0e9', c: '#fff0f5', cent: '#ffe98a' } : { p: '#ffb3c6', c: '#ff8fab', cent: '#ffe98a' };
+  el.innerHTML = `
+  <svg width="90" height="70" viewBox="0 0 90 70" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 10px rgba(255,180,180,0.35))">
+    <ellipse cx="45" cy="62" rx="22" ry="6" fill="rgba(0,80,60,0.25)"/>
+    <path d="M45,60 Q35,45 28,30 Q32,20 45,18 Q58,20 62,30 Q55,45 45,60 Z" fill="${s.p}" opacity="0.85"/>
+    <path d="M45,60 Q55,45 62,30 Q58,20 45,18" fill="${s.c}" opacity="0.5"/>
+    <path d="M45,60 Q28,40 18,22 Q22,10 36,12 Q40,22 45,18 Q42,35 45,60 Z" fill="${s.p}" opacity="0.75"/>
+    <path d="M45,60 Q62,40 72,22 Q68,10 54,12 Q50,22 45,18 Q48,35 45,60 Z" fill="${s.p}" opacity="0.75"/>
+    <path d="M45,60 Q20,55 10,40 Q8,28 20,26 Q28,30 45,18 Q35,38 45,60 Z" fill="${s.p}" opacity="0.6"/>
+    <path d="M45,60 Q70,55 80,40 Q82,28 70,26 Q62,30 45,18 Q55,38 45,60 Z" fill="${s.p}" opacity="0.6"/>
+    <circle cx="45" cy="26" r="7" fill="${s.cent}" opacity="0.9"/>
+    <circle cx="45" cy="26" r="4" fill="#ffe98a"/>
+    <line x1="45" y1="60" x2="45" y2="70" stroke="#2d7a3a" stroke-width="2" opacity="0.6"/>
+  </svg>`;
+  return el;
+}
+[[8, 0.7, 'pink'], [20, 0.55, 'white'], [50, 0.9, 'pink'], [72, 0.65, 'pink'], [88, 0.75, 'white']].forEach(([x, s, h]) => {
+  lotusScene.appendChild(makeLotus(x, s, h));
+});
+
+/* ═══════════════════════════════════════════
+   PARALLAX
+═══════════════════════════════════════════ */
+document.addEventListener('mousemove', e => {
+  const xr = (e.clientX / window.innerWidth - 0.5) * 20;
+  const yr = (e.clientY / window.innerHeight - 0.5) * 12;
+  document.querySelector('.moon-wrap').style.transform = `translate(${xr * 0.4}px,${yr * 0.3}px)`;
+  starCanvas.style.transform = `translate(${xr * 0.08}px,${yr * 0.06}px)`;
+});
+
+/* ═══════════════════════════════════════════
+   CARD OPEN
+═══════════════════════════════════════════ */
+function openCard() {
+  const wrap = document.getElementById('cardWrap');
+  const closed = document.getElementById('cardClosed');
+  const open = document.getElementById('cardOpen');
+  wrap.classList.add('opening');
+  setTimeout(() => {
+    closed.style.display = 'none';
+    open.style.display = 'block';
+    open.classList.add('visible');
+    triggerCelebration();
+    startTyping();
+  }, 520);
+}
+
+/* ═══════════════════════════════════════════
+   TYPING ANIMATION
+═══════════════════════════════════════════ */
+function startTyping() {
+  const sEl = document.getElementById('sinhalaTyped');
+  const eEl = document.getElementById('englishTyped');
+  const si = 'සුභ වෙසක් මංගල්‍යයක් වේවා!';
+  const en = 'Happy Vesak Day';
+  let i = 0;
+  sEl.classList.add('typed-cursor');
+  function typeSi() {
+    if (i <= si.length) { sEl.textContent = si.slice(0, i); i++; setTimeout(typeSi, 60); }
+    else { sEl.classList.remove('typed-cursor'); typeEn(); }
+  }
+  let j = 0;
+  function typeEn() {
+    eEl.classList.add('typed-cursor');
+    if (j <= en.length) { eEl.textContent = en.slice(0, j); j++; setTimeout(typeEn, 70); }
+    else { eEl.classList.remove('typed-cursor'); }
+  }
+  typeSi();
+}
+
+/* ═══════════════════════════════════════════
+   CONFETTI / CELEBRATION
+═══════════════════════════════════════════ */
+const confCanvas = document.getElementById('confettiCanvas');
+const cCtx = confCanvas.getContext('2d');
+let confetti = [];
+
+function resizeConf() { confCanvas.width = window.innerWidth; confCanvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeConf); resizeConf();
+
+function triggerCelebration() {
+  const cols = ['#f5c842', '#ff8c00', '#ffe98a', '#ffb3c6', '#ffffff', '#ff6b6b', '#aaccff'];
+  for (let i = 0; i < 140; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const spd = 4 + Math.random() * 8;
+    confetti.push({
+      x: window.innerWidth / 2, y: window.innerHeight / 2,
+      vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd - 6,
+      r: 3 + Math.random() * 5, a: 1,
+      color: cols[Math.floor(Math.random() * cols.length)],
+      gravity: 0.15 + Math.random() * 0.1,
+      spin: Math.random() * 0.3 - 0.15,
+      rot: Math.random() * Math.PI * 2,
+    });
+  }
+}
+
+function drawConfetti() {
+  cCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+  confetti = confetti.filter(c => c.a > 0.01);
+  confetti.forEach(c => {
+    c.x += c.vx; c.y += c.vy; c.vy += c.gravity; c.a -= 0.012; c.rot += c.spin;
+    cCtx.save();
+    cCtx.globalAlpha = c.a;
+    cCtx.fillStyle = c.color;
+    cCtx.shadowBlur = 8; cCtx.shadowColor = c.color;
+    cCtx.translate(c.x, c.y); cCtx.rotate(c.rot);
+    cCtx.fillRect(-c.r / 2, -c.r / 2, c.r, c.r * 1.6);
+    cCtx.restore();
+  });
+  requestAnimationFrame(drawConfetti);
+}
+drawConfetti();
+
+/* ═══════════════════════════════════════════
+   AUDIO PLAYBACK
+═══════════════════════════════════════════ */
+const bgAudio = document.getElementById('bgAudio');
+let musicOn = false;
+
+// Set default comfortable volume
+bgAudio.volume = 0.5;
+
+function toggleMusic() {
+  const btn = document.getElementById('musicBtn');
+  if (!musicOn) {
+    bgAudio.play().then(() => {
+      musicOn = true;
+      btn.classList.add('active');
+      btn.textContent = '🔊';
+    }).catch(err => {
+      console.error("Audio playback failed:", err);
+    });
+  } else {
+    bgAudio.pause();
+    musicOn = false;
+    btn.classList.remove('active');
+    btn.textContent = '🎵';
+  }
+}
+
+/* ═══════════════════════════════════════════
+   FX TOGGLE
+═══════════════════════════════════════════ */
+function toggleFX() {
+  fxEnabled = !fxEnabled;
+  const btn = document.getElementById('fxBtn');
+  btn.classList.toggle('active', fxEnabled);
+  lanternField.style.opacity = fxEnabled ? '1' : '0';
+  petalField.style.opacity = fxEnabled ? '1' : '0';
+}
+
+/* ═══════════════════════════════════════════
+   EASTER EGG
+═══════════════════════════════════════════ */
+let easterClickCount = 0;
+function showEaster() {
+  easterClickCount++;
+  if (easterClickCount >= 1) {
+    document.getElementById('easterPopup').classList.add('show');
+    triggerCelebration();
+  }
+}
+function hideEaster() {
+  document.getElementById('easterPopup').classList.remove('show');
+}
+
+// Secret: click moon 3 times
+let moonClicks = 0;
+document.querySelector('.moon-wrap').style.cursor = 'default';
+document.querySelector('.moon-wrap').addEventListener('click', () => {
+  moonClicks++;
+  if (moonClicks >= 3) { showEaster(); moonClicks = 0; }
+});
+
+/* ═══════════════════════════════════════════
+   CARD CLICK SPARKLE
+═══════════════════════════════════════════ */
+document.getElementById('cardClosed').addEventListener('click', e => {
+  for (let i = 0; i < 20; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const spd = Math.random() * 3 + 1;
+    particles.push({
+      x: e.clientX, y: e.clientY,
+      r: Math.random() * 2 + 0.5,
+      vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+      a: 1, color: '#f5c842'
+    });
+  }
+});
