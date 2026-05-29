@@ -1056,7 +1056,7 @@ body {
 
   .birth-decoration {
     left: 10px;
-    bottom: 180px;
+    bottom: 400px;
   }
 
   .birth-img {
@@ -1064,8 +1064,9 @@ body {
   }
 
   .parinirvana-decoration {
-    height: clamp(160px, 22vh, 280px);
+    height: clamp(460px, 22vh, 280px);
     left: 10px;
+    bottom: -100px;
   }
 
   .logo-container {
@@ -1117,7 +1118,7 @@ body {
 
   /* Buddha: smaller, stays far right, doesn't bleed over card */
   .buddha-decoration {
-    height: clamp(200px, 36vh, 340px);
+    height: clamp(400px, 36vh, 340px);
     right: -50px;
     bottom: -10px;
     opacity: 0.55; /* fade back so card is clearly primary */
@@ -1126,7 +1127,7 @@ body {
   /* Baby Siddhartha: tuck into bottom-left corner */
   .birth-decoration {
     left: -10px;
-    bottom: 130px;
+    bottom: 370px;
   }
 
   .birth-img {
@@ -1135,9 +1136,9 @@ body {
 
   /* Parinirvana: very small on mobile */
   .parinirvana-decoration {
-    height: clamp(100px, 14vh, 160px);
+    height: clamp(450px, 14vh, 160px);
     left: 5px;
-    bottom: -10px;
+    bottom: -100px;
     opacity: 0.55;
   }
 
@@ -1185,14 +1186,16 @@ body {
   }
 
   .buddha-decoration {
-    height: clamp(160px, 28vh, 260px);
+    height: clamp(360px, 28vh, 260px);
     right: -55px;
     opacity: 0.45;
   }
 
   .birth-decoration {
     left: -15px;
-    bottom: 100px;
+    bottom: 400px;
+    left: 20px;
+    opacity: 0.6;
   }
 
   .birth-img {
@@ -1200,8 +1203,9 @@ body {
   }
 
   .parinirvana-decoration {
-    height: clamp(80px, 11vh, 120px);
+    height: clamp(300px, 11vh, 120px);
     opacity: 0.45;
+    bottom:-80px;
   }
 
   .blt { font-size: 0.85rem; }
